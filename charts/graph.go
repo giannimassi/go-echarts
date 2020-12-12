@@ -1,8 +1,8 @@
 package charts
 
 import (
-	"github.com/go-echarts/go-echarts/v2/opts"
-	"github.com/go-echarts/go-echarts/v2/types"
+	"github.com/giannimassi/go-echarts/v2/opts"
+	"github.com/giannimassi/go-echarts/v2/types"
 )
 
 // Graph represents a graph chart.

@@ -1,9 +1,9 @@
 package charts
 
 import (
-	"github.com/go-echarts/go-echarts/v2/datasets"
-	"github.com/go-echarts/go-echarts/v2/opts"
-	"github.com/go-echarts/go-echarts/v2/render"
+	"github.com/giannimassi/go-echarts/v2/datasets"
+	"github.com/giannimassi/go-echarts/v2/opts"
+	"github.com/giannimassi/go-echarts/v2/render"
 )
 
 // GlobalOpts sets the Global options for charts.
