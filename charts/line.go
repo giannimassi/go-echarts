@@ -37,6 +37,21 @@ func (c *Line) AddSeries(name string, data []opts.LineData, options ...SeriesOpt
 	return c
 }
 
+// UpdateSeries updates an existing series.
+// If a series with the provided name is not found it is added.
+func (c *Line) UpdateSeries(name string, data []opts.LineData, options ...SeriesOpts) *Line {
+	series := SingleSeries{Name: name, Type: types.ChartLine, Data: data}
+	series.configureSeriesOpts(options...)
+	for i, s := range c.MultiSeries {
+		if s.Name == name {
+			c.MultiSeries[i] = series
+			return c
+		}
+	}
+	c.MultiSeries = append(c.MultiSeries, series)
+	return c
+}
+
 // Validate validates the given configuration.
 func (c *Line) Validate() {
 	c.XAxisList[0].Data = c.xAxisData

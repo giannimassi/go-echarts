@@ -15,6 +15,7 @@ import (
 // you can define your own render logic easily.
 type Renderer interface {
 	Render(w io.Writer) error
+	RenderWs(w io.Writer, host string) error
 }
 
 const (
@@ -53,6 +54,27 @@ func (r *pageRender) Render(w io.Writer) error {
 	return err
 }
 
+// Render
+func (r *pageRender) RenderWs(w io.Writer, host string) error {
+	for _, fn := range r.before {
+		fn()
+	}
+
+	contents := []string{tpls.HeaderTpl, tpls.BaseWsTpl, tpls.PageTpl}
+	tpl := MustTemplate(ModPage, contents)
+
+	var buf bytes.Buffer
+	if err := tpl.ExecuteTemplate(&buf, ModPage, r.c); err != nil {
+		return err
+	}
+
+	pat := regexp.MustCompile(`(__f__")|("__f__)|(__f__)`)
+	content := pat.ReplaceAll(buf.Bytes(), []byte(""))
+
+	_, err := w.Write(content)
+	return err
+}
+
 type chartRender struct {
 	c      interface{}
 	before []func()
@@ -70,6 +92,27 @@ func (r *chartRender) Render(w io.Writer) error {
 	}
 
 	contents := []string{tpls.HeaderTpl, tpls.BaseTpl, tpls.ChartTpl}
+	tpl := MustTemplate(ModChart, contents)
+
+	var buf bytes.Buffer
+	if err := tpl.ExecuteTemplate(&buf, ModChart, r.c); err != nil {
+		return err
+	}
+
+	pat := regexp.MustCompile(`(__f__")|("__f__)|(__f__)`)
+	content := pat.ReplaceAll(buf.Bytes(), []byte(""))
+
+	_, err := w.Write(content)
+	return err
+}
+
+// Render
+func (r *chartRender) RenderWs(w io.Writer) error {
+	for _, fn := range r.before {
+		fn()
+	}
+
+	contents := []string{tpls.HeaderTpl, tpls.BaseWsTpl, tpls.ChartTpl}
 	tpl := MustTemplate(ModChart, contents)
 
 	var buf bytes.Buffer
